@@ -134,6 +134,7 @@ namespace ABAFS
             gameOverInfoTextPos = new Vector2(305, 210);
             backTextPos = new Vector2(200, 280);
 
+
             lifePos = new Vector2[3];
             lifePos[0] = new Vector2(110, 453);
             lifePos[1] = new Vector2(140, 453);
