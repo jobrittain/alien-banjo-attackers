@@ -1,0 +1,3 @@
+﻿- Player-to-banjo resulting in noclips without collision
+- Mildly aggressive banjos don't always follow player after 5 secs retaining normal banjo behaviour
+- Mildly aggressive banjos sometimes change behaviour to normal after getting close to the player

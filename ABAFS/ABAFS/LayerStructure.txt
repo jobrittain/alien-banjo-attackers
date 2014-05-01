@@ -1,0 +1,15 @@
+﻿Debug Text = 1
+Overlay Messages / Title / Etc = 1
+
+Title Mask = 1
+Title Shine = 0.992
+Title Text = 0.991
+
+Debug Object Boxes (except spawn points) = 0.99
+Player = 0.95
+Banjos = 0.800 - 0.989
+Notes = 0.720 - 0.799
+
+Score & Lives = 0.1
+Debug Spawn Point Boxes = 0.05
+Background = 0
