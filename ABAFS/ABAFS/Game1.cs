@@ -37,7 +37,6 @@ namespace ABAFS
         Texture2D[] noteTexture = new Texture2D[3];
         Texture2D pixelTexture;
         Texture2D backgroundTexture;
-        //Texture2D[] starTexture = new Texture2D[2];
         Texture2D[] buttonTexture = new Texture2D[2];
 
         // Rectangles
@@ -125,22 +124,6 @@ namespace ABAFS
             banjoSpawnLoc[3] = new Vector2(620, 20);
             banjoSpawnLoc[4] = new Vector2(750, 10);
 
-            // Star positions
-            //starPos = new Vector2[20];
-            //starPos[0] = new Vector2(200, 10);
-            //starPos[1] = new Vector2(120, 80);
-            //starPos[2] = new Vector2(680, 130);
-            //starPos[3] = new Vector2(150, 150);
-            //starPos[4] = new Vector2(170, 170);
-            //starPos[5] = new Vector2(175, 175);
-            //starPos[6] = new Vector2(190, 200);
-            //starPos[7] = new Vector2(210, 180);
-            //starPos[8] = new Vector2(10, 200);
-            //starPos[9] = new Vector2(100, 210);
-            //starPos[10] = new Vector2(95, 235);
-            //starPos[11] = new Vector2(105, 250);
-            //starPos[12] = new Vector2(70, 182);
-
             // Create a new SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -161,8 +144,6 @@ namespace ABAFS
             noteTexture[2] = Content.Load<Texture2D>("note3");
             pixelTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             backgroundTexture = Content.Load<Texture2D>("background");
-            //starTexture[0] = Content.Load<Texture2D>("star1");
-            //starTexture[1] = Content.Load<Texture2D>("star2");
             pixelTexture.SetData(new[] { Color.White });
 
             // Load fonts
@@ -650,22 +631,6 @@ namespace ABAFS
         {
             // Draw background
             spriteBatch.Draw(backgroundTexture, backgroundRectangle, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
-
-            // Draw stars
-            //spriteBatch.Draw(starTexture[0], starPos[0], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[1], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[2], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[3], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[4], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[5], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[6], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[7], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[8], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[9], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[10], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[11], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-            //spriteBatch.Draw(starTexture[0], starPos[12], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-
         }
         void DrawGameInfo()
         {
