@@ -1,9 +1,6 @@
 ﻿Debug Text = 1
-Overlay Messages / Title / Etc = 1
-
-Title Mask = 1
-Title Shine = 0.992
-Title Text = 0.991
+Overlay Messages & Title & Menu Button Highlight = 1
+Menu Buttons = 0.999
 
 Debug Object Boxes (except spawn points) = 0.99
 Player = 0.95
