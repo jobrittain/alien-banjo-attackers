@@ -44,6 +44,7 @@ namespace ABAFS
 
         // Fonts
         SpriteFont debugFont;
+        SpriteFont tinyFont;
         SpriteFont smallFont;
         SpriteFont mediumFont;
         SpriteFont largeFont;
@@ -67,7 +68,8 @@ namespace ABAFS
         Vector2 scoreTextPos;
         Vector2 livesTextPos;
 
-        Vector2 mainTitlePos;
+        Vector2 startTitlePos;
+        Vector2 menuTitlePos;
         Vector2 menuPos;
         Vector2 startTextPos;
         Vector2 highScoreTextPos;
@@ -148,18 +150,22 @@ namespace ABAFS
 
             // Load fonts
             debugFont = Content.Load<SpriteFont>("font1");
-            smallFont = Content.Load<SpriteFont>("font2");
+            tinyFont = Content.Load<SpriteFont>("font2");
+            smallFont = Content.Load<SpriteFont>("font5");
             mediumFont = Content.Load<SpriteFont>("font3");
             largeFont = Content.Load<SpriteFont>("font4");
 
             // Set positions
-            mainTitlePos = new Vector2(GetTextureCenterPoint(mainTitleTexture, CenterPointType.X), 100);
-            menuPos = new Vector2(GetTextureCenterPoint(buttonTexture[0], CenterPointType.X), 300);
+            float titleCenterPointX = UsefulFunctions.GetTextureCenterPoint(graphics.GraphicsDevice.Viewport.Bounds, Vector2.Zero, mainTitleTexture, UsefulFunctions.CenterPointType.X);
+            startTitlePos = new Vector2(titleCenterPointX, 100);
+            menuTitlePos = new Vector2(titleCenterPointX, 10);
+
+            menuPos = new Vector2(UsefulFunctions.GetTextureCenterPoint(graphics.GraphicsDevice.Viewport.Bounds, Vector2.Zero, buttonTexture[0], UsefulFunctions.CenterPointType.X), 200);
             debugTextPos = new Vector2(1, 1);
             fpsTextPos = new Vector2(725, 1);
             scoreTextPos = new Vector2(1, 430);
             livesTextPos = new Vector2(110, 430);
-            startTextPos = new Vector2(GetSpriteFontCenterPoint(smallFont,"Press enter to play",CenterPointType.X), 300);
+            startTextPos = new Vector2(UsefulFunctions.GetSpriteFontCenterPoint(graphics.GraphicsDevice.Viewport.Bounds, Vector2.Zero, tinyFont, "Press enter to play", UsefulFunctions.CenterPointType.X), 300);
             highScoreTextPos = new Vector2(580, 1);
             gameOverTextPos = new Vector2(270, 150);
             gameOverInfoTextPos = new Vector2(305, 210);
@@ -187,51 +193,22 @@ namespace ABAFS
             saveManager = new SaveManager("savegame.xml", playfield);
             saveManager.Load();
 
-            menu = new Menu(menuPos, 20f, buttonTexture);
+            menu = new Menu(menuPos, 60f, buttonTexture, smallFont);
+            menu.AddItem("New Game");
+            menu.AddItem("Continue", true);
+            menu.AddItem("Exit");
 
             screenSys = new ScreenSystem(playfield, menu,
                 startMusic, gameOverMusicNormal, gameOverMuiscHighScore, // Music
-                menuSelectSound,                 // Selection Sound
-                mainTitleTexture, mainTitlePos,  // Main title
-                smallFont, startTextPos,         // Start text
-                smallFont, highScoreTextPos,     // High score
-                largeFont, gameOverTextPos,      // Game over text
-                smallFont, gameOverInfoTextPos,  // Game over info (score etc.)
-                smallFont, backTextPos);         // Return to start text
+                menuSelectSound,                                         // Selection Sound
+                mainTitleTexture, startTitlePos, menuTitlePos,           // Title
+                tinyFont, startTextPos,                                 // Start text
+                tinyFont, highScoreTextPos,                             // High score
+                largeFont, gameOverTextPos,                              // Game over text
+                tinyFont, gameOverInfoTextPos,                          // Game over info (score etc.)
+                tinyFont, backTextPos);                                 // Return to start text
 
             Debug.WriteLine(GraphicsDeviceManager.DefaultBackBufferWidth + " x " + GraphicsDeviceManager.DefaultBackBufferHeight);
-        }
-
-        enum CenterPointType
-        {
-            X,
-            Y
-        }
-        float GetTextureCenterPoint(Texture2D texture, CenterPointType pointType)
-        {
-            float textureCenter;
-            if (pointType == CenterPointType.X)
-            {
-                textureCenter = (graphics.GraphicsDevice.Viewport.Width / 2) - (texture.Width / 2);
-            }
-            else
-            {
-                textureCenter = (graphics.GraphicsDevice.Viewport.Height / 2) - (texture.Height / 2);
-            }
-            return textureCenter;
-        }
-        float GetSpriteFontCenterPoint(SpriteFont spriteFont, string text, CenterPointType pointType)
-        {
-            float spriteFontCenter;
-            if (pointType == CenterPointType.X)
-            {
-                spriteFontCenter = (graphics.GraphicsDevice.Viewport.Width / 2) - (spriteFont.MeasureString(text).X / 2);
-            }
-            else
-            {
-                spriteFontCenter = (graphics.GraphicsDevice.Viewport.Height / 2) - (spriteFont.MeasureString(text).Y / 2);
-            }
-            return spriteFontCenter;
         }
 
         /// <summary>
@@ -289,6 +266,11 @@ namespace ABAFS
                     saveManager.Save(false);
                     autoSaved = true;
                 }
+            }
+
+            if (exitTriggered == true)
+            {
+                Exit();
             }
 
             base.Update(gameTime);
@@ -636,8 +618,8 @@ namespace ABAFS
         {
             if (playfield.GameOver == false)
             {
-                spriteBatch.DrawString(smallFont, "Score\n" + playfield.Player.Score.ToString(), scoreTextPos, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
-                spriteBatch.DrawString(smallFont, "Lives", livesTextPos, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.DrawString(tinyFont, "Score\n" + playfield.Player.Score.ToString(), scoreTextPos, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                spriteBatch.DrawString(tinyFont, "Lives", livesTextPos, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
                 for (int life = 0; life < playfield.Player.Lives; life++)
                 {
                     spriteBatch.Draw(lifeTexture, lifePos[life], null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
@@ -736,14 +718,14 @@ namespace ABAFS
     public class ScreenSystem
     {
 
-        public enum MenuMode
+        public enum ScreenMode
         {
             Start,
             Main,
             Gameover
         }
 
-        public MenuMode Mode;
+        public ScreenMode Mode;
         public bool Active = true;
 
         enum GameoverMusicType
@@ -755,6 +737,7 @@ namespace ABAFS
         GameoverMusicType _gameOverMusicType;
 
         Playfield _playfield;
+        Menu _menu;
 
         Texture2D _mainTitleTexture;
 
@@ -769,9 +752,10 @@ namespace ABAFS
         SoundEffectInstance _gameOverHighScoreMusic;
         SoundEffectInstance _menuSelectSound; 
 
-        Vector2 _mainTitlePosition;
+        Vector2 _startTitlePosition;
         Vector2 _startTextPosition;
         Vector2 _highScorePosition;
+        Vector2 _menuTitlePosition;
         Vector2 _gameOverTextPosition;
         Vector2 _gameOverInfoPosition;
         Vector2 _backTextPosition;
@@ -782,6 +766,7 @@ namespace ABAFS
         bool _returnButtonDown = false;
         bool _startButtonDown = false;
         bool _musicStarted = false;
+        bool _titleMoved = false;
         string _startMessage;
         string _backMessage;
         string _highScoreText;
@@ -789,7 +774,7 @@ namespace ABAFS
         string _gameOverInfoHighScoreText;
         double _gameOverTime;
         double _shineRespawnTime;
-        int _backWaitTime;
+        int _backWaitTime = 2;
         int _playerScore;
         int _highScore;
         
@@ -800,7 +785,7 @@ namespace ABAFS
         public ScreenSystem(Playfield playfield, Menu menu,
             SoundEffect mainTitleMusic, SoundEffect gameOverMusic, SoundEffect gameOverHighScoreMusic,
             SoundEffect menuSelectSound,
-            Texture2D mainTitleTexture, Vector2 mainTitlePosition,
+            Texture2D mainTitleTexture, Vector2 startTitlePosition, Vector2 menuTitlePosition,
             SpriteFont startTextFont, Vector2 startTextPosition,
             SpriteFont highScoreFont, Vector2 highScorePosition,
             SpriteFont gameOverTextFont, Vector2 gameOverTextPosition,
@@ -809,26 +794,34 @@ namespace ABAFS
             )
         {
             _playfield = playfield;
+            _menu = menu;
 
+            // Textures
             _mainTitleTexture = mainTitleTexture;
-
+            
+            // Font
             _startTextFont = startTextFont;
             _highScoreFont = highScoreFont;
             _gameOverTextFont = gameOverTextFont;
             _gameOverInfoFont = gameOverInfoFont;
             _backTextFont = backTextFont;
 
+            // Music
             _mainTitleMusic = mainTitleMusic.CreateInstance();
             _mainTitleMusic.IsLooped = true;
             _gameOverMusic = gameOverMusic.CreateInstance();
             _gameOverMusic.IsLooped = true;
             _gameOverHighScoreMusic = gameOverHighScoreMusic.CreateInstance();
             _gameOverHighScoreMusic.IsLooped = true;
+
+            // Sound
             _menuSelectSound = menuSelectSound.CreateInstance();
 
-            _mainTitlePosition = mainTitlePosition;
+            // Positions
+            _startTitlePosition = startTitlePosition;
             _startTextPosition = startTextPosition;
             _highScorePosition = highScorePosition;
+            _menuTitlePosition = menuTitlePosition;
             _gameOverTextPosition = gameOverTextPosition;
             _gameOverInfoPosition = gameOverInfoPosition;
             _backTextPosition = backTextPosition;
@@ -847,6 +840,8 @@ namespace ABAFS
                               + "      Press backspace to exit";
             }
         }
+
+        double _moveTitleWaitTime = 0.1;
 
         public void Update(GameTime gameTime, ref bool gameActive, ref bool exitTriggered, ref bool autoSaved, bool newHighScore)
         {
@@ -868,11 +863,11 @@ namespace ABAFS
             // Music
             if (_musicStarted == false)
             {
-                if (Mode == MenuMode.Main)
+                if (Mode == ScreenMode.Start)
                 {
                     _mainTitleMusic.Play();
                 }
-                else
+                else if (Mode == ScreenMode.Gameover)
                 {
                     if (newHighScore == true)
                     {
@@ -888,7 +883,8 @@ namespace ABAFS
                 _musicStarted = true;
             }
 
-            if (Mode == MenuMode.Main)
+            // Behaviour
+            if (Mode == ScreenMode.Start)
             {
                 _alphaVal = GetAlphaVal(_alphaSinInput);
                 _alphaSinInput += 0.01f;
@@ -898,17 +894,7 @@ namespace ABAFS
                     if (_returnButtonDown == false)
                     {
                         _menuSelectSound.Play();
-                        _updatedScores = false;
-                        _playfield.Reset();
-                        _mainTitleMusic.Stop();
-                        _musicStarted = false;
-
-                        autoSaved = false;
-                        gameActive = true;
-                        Active = false;
-                        Mode = MenuMode.Gameover;
-
-                        _returnButtonDown = true;
+                        Mode = ScreenMode.Main;
                     }
                 }
                 else
@@ -917,7 +903,65 @@ namespace ABAFS
                 }
 
             }
-            else
+            else if (Mode == ScreenMode.Main)
+            {
+                
+                if (_titleMoved == false)
+                {
+                    _moveTitleWaitTime += gameTime.ElapsedGameTime.TotalSeconds;
+                    if (_moveTitleWaitTime > 0)
+                    {
+                        _startTitlePosition.Y--;
+                        if (_startTitlePosition.Y <= _menuTitlePosition.Y)
+                        {
+                            _titleMoved = true;
+                        }
+                    }
+                }
+                else
+                {
+                    _menu.Update();
+                    if (_menu.ButtonSelected == true)
+                    {
+                        _menuSelectSound.Play();
+                        switch (_menu.SelectedButtonIndex)
+                        {
+                            case 0:
+                                _updatedScores = false;
+                                _playfield.Reset();
+                                _mainTitleMusic.Stop();
+                                _musicStarted = false;
+                                
+                                autoSaved = false;
+                                Active = false;
+                                gameActive = true;
+                                Mode = ScreenMode.Gameover;
+                                break;
+                            
+                            case 1:
+
+                                break;
+
+                            case 2:
+                                exitTriggered = true;
+                                break;
+                        }
+                    }
+                }
+
+                //_updatedScores = false;
+                //_playfield.Reset();
+                //_mainTitleMusic.Stop();
+                //_musicStarted = false;
+
+                //autoSaved = false;
+                //gameActive = true;
+                //Active = false;
+                //Mode = ScreenMode.Gameover;
+
+                //_returnButtonDown = true;
+            }
+            else // Gameover
             {
                 if (_gameOverTime > _backWaitTime)
                 {
@@ -935,7 +979,7 @@ namespace ABAFS
                                 _gameOverMusic.Stop();
                             }
                             _musicStarted = false;
-                            Mode = MenuMode.Main;
+                            Mode = ScreenMode.Start;
 
                             _returnButtonDown = true;
                         }
@@ -962,18 +1006,22 @@ namespace ABAFS
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (Mode == MenuMode.Start)
+            if (Mode == ScreenMode.Start)
             {
-                spriteBatch.Draw(_mainTitleTexture, _mainTitlePosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                spriteBatch.Draw(_mainTitleTexture, _startTitlePosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(_startTextFont, _startMessage, _startTextPosition, Color.White * _alphaVal, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(_highScoreFont, _highScoreText, _highScorePosition, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
                 //spriteBatch.DrawString(_highScoreFont, _alphaVal.ToString(), _highScorePosition, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
             }
-            else if (Mode == MenuMode.Main)
+            else if (Mode == ScreenMode.Main)
             {
-                spriteBatch.Draw(_mainTitleTexture, _mainTitlePosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                spriteBatch.Draw(_mainTitleTexture, _startTitlePosition, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                if (_titleMoved == true)
+                {
+                    _menu.Draw(spriteBatch);
+                }
             }
-            else
+            else // Gameover
             {
                 spriteBatch.DrawString(_gameOverTextFont, "Game Over", _gameOverTextPosition, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(_gameOverInfoFont, _gameOverInfoScoreText + _gameOverInfoHighScoreText, _gameOverInfoPosition, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
@@ -991,16 +1039,17 @@ namespace ABAFS
         public class MenuItem
         {
             public Vector2 Position;
+            public Vector2 TextPosition;
             public bool Blank;
-
-            string _text;
+            public string Text;
             
 
-            public MenuItem(bool blank, string text, Vector2 position)
+            public MenuItem(bool blank, string text, Vector2 position, Vector2 textPosition)
             {
                 Blank = blank;
                 Position = position;
-                _text = text;
+                TextPosition = textPosition;
+                Text = text;
             }
 
         }
@@ -1012,60 +1061,116 @@ namespace ABAFS
 
         public Vector2 Location;
         public int SelectedButtonIndex;
+        public bool ButtonSelected;
 
         public List<MenuItem> MenuItems;
 
         Texture2D[] _buttonTexture;
+        SpriteFont _buttonFont;
 
         float _spacing;
-        bool _selectedItemChanged;
+        bool _keyDown;
+        bool _keyUp;
+        bool _thumbStickDown;
+        bool _thumbStickUp;
 
-        public Menu(Vector2 location, float spacing, Texture2D[] buttonTexture)
+        public Menu(Vector2 location, float spacing, Texture2D[] buttonTexture, SpriteFont buttonFont)
         {
             MenuItems = new List<MenuItem>();
             Location = location;
             _spacing = spacing;
             _buttonTexture = buttonTexture;
+            _buttonFont = buttonFont;
         }
 
-        public void AddItem(int index, string buttonText, bool blank = false)
+        public void AddItem(string buttonText, bool blank = false)
         {
             Vector2 buttonPosition;
-            if (index != 0)
+            int itemCount = MenuItems.Count;
+
+            if (itemCount != 0)
             {
-                buttonPosition = new Vector2(Location.X, MenuItems[index - 1].Position.Y + _spacing);
+                buttonPosition = new Vector2(Location.X, MenuItems[itemCount - 1].Position.Y + _spacing);
             }
             else
             {
                 buttonPosition = new Vector2(Location.X, Location.Y);
             }
 
-            MenuItems.Add(new MenuItem(blank, buttonText, buttonPosition));
+            MenuItems.Add(new MenuItem(blank, buttonText, buttonPosition, 
+                new Vector2(
+                    UsefulFunctions.GetSpriteFontCenterPoint(_buttonTexture[0].Bounds, buttonPosition, _buttonFont, buttonText, UsefulFunctions.CenterPointType.X),
+                    UsefulFunctions.GetSpriteFontCenterPoint(_buttonTexture[0].Bounds, buttonPosition, _buttonFont, buttonText, UsefulFunctions.CenterPointType.Y)
+                    )));
         }
 
         public void Update()
         {
-            // Up
-            if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < -0.8f && _selectedItemChanged == false)
+            if (GamePad.GetState(PlayerIndex.One).IsConnected)
             {
-                Move(Direction.Down);
-                _selectedItemChanged = true;
-            }
-            else if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > -0.2f)
-            {
-                _selectedItemChanged = false;
+                // Down
+                if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < -0.8f && _thumbStickDown == false)
+                {
+                    Move(Direction.Down);
+                    _thumbStickDown = true;
+                }
+                else if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > -0.2f)
+                {
+                    _thumbStickDown = false;
+                }
+
+                // Up
+                if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > 0.8f && _thumbStickUp == false)
+                {
+                    Move(Direction.Up);
+                    _thumbStickUp = true;
+                }
+                else if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < 0.2f)
+                {
+                    _thumbStickUp = false;
+                }
+
+                // Select
+                if (GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed)
+                {
+                    ButtonSelected = true;
+                }
             }
 
             // Down
-            if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > 0.8f && _selectedItemChanged == false)
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                Move(Direction.Up);
-                _selectedItemChanged = true;
+                if  (_keyDown == false)
+                {
+                    Move(Direction.Down);
+                    _keyDown = true;
+                }
             }
-            else if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < 0.2f)
+            else
             {
-                _selectedItemChanged = false;
+                _keyDown = false;
             }
+
+            // Up
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                if (_keyUp == false)
+                {
+                    Move(Direction.Up);
+                    _keyUp = true;
+                }
+            }
+            else
+            {
+                _keyUp = false;
+            }
+
+            // Select
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                ButtonSelected = true;
+            }
+            
         }
 
         void Move(Direction direction, int ammount = 1)
@@ -1078,6 +1183,10 @@ namespace ABAFS
                     {
                         SelectedButtonIndex++;
                     }
+                    else
+                    {
+                        SelectedButtonIndex = 0;
+                    }
                 }
                 else
                 {
@@ -1085,7 +1194,17 @@ namespace ABAFS
                     {
                         SelectedButtonIndex--;
                     }
+                    else
+                    {
+                        SelectedButtonIndex = MenuItems.Count - 1;
+                    }
                 }
+
+                if (MenuItems[SelectedButtonIndex].Blank == true)
+                {
+                    ammount++;
+                }
+
                 ammount--;
             }
         }
@@ -1097,6 +1216,7 @@ namespace ABAFS
                 if (menuItem.Blank == false)
                 {
                     spriteBatch.Draw(_buttonTexture[0], menuItem.Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.999f);
+                    spriteBatch.DrawString(_buttonFont, menuItem.Text, menuItem.TextPosition, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
                 }
             }
             spriteBatch.Draw(_buttonTexture[1], MenuItems[SelectedButtonIndex].Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
