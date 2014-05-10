@@ -1,0 +1,7 @@
+﻿- Fix menu reload
+- Clear background from explode textures
+- Add glow to accordian when firing
+- Improve GameOver screen
+- Add fading everywhere
+- Write userguide
+- Smooth out music

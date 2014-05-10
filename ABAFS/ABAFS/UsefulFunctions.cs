@@ -43,5 +43,10 @@ namespace ABAFS
             return spriteFontCenter;
         }
 
+        public static float GetSineAlphaVal(float val, double phase = 0)
+        {
+            return 1 - ((float)Math.Pow(Math.Sin(((val + phase) * 1.7)), 2) * 0.8f);
+        }
+
     }
 }
