@@ -31,7 +31,7 @@ namespace ABAFS
 
         // Textures
         Texture2D mainTitleTexture;
-        Texture2D accordianTexture;
+        Texture2D[] accordianTexture = new Texture2D[2];
         Texture2D lifeTexture;
         Texture2D[] banjoTexture = new Texture2D[3];
         Texture2D[] noteTexture = new Texture2D[3];
@@ -121,7 +121,7 @@ namespace ABAFS
         protected override void LoadContent()
         {
             // Set spawn locations
-            accordianSpawnLoc = new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height - 75);
+            accordianSpawnLoc = new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height - 80);
             banjoSpawnLoc[0] = new Vector2(10, 10);
             banjoSpawnLoc[1] = new Vector2(220, 50);
             banjoSpawnLoc[2] = new Vector2(390, 35);
@@ -138,7 +138,8 @@ namespace ABAFS
             mainTitleTexture = Content.Load<Texture2D>("title");
             buttonTexture[0] = Content.Load<Texture2D>("button");
             buttonTexture[1] = Content.Load<Texture2D>("buttonh");
-            accordianTexture = Content.Load<Texture2D>("accordian");
+            accordianTexture[0] = Content.Load<Texture2D>("accordian");
+            accordianTexture[1] = Content.Load<Texture2D>("accordiang");
             lifeTexture = Content.Load<Texture2D>("accordian2");
             banjoTexture[0] = Content.Load<Texture2D>("banjo1");
             banjoTexture[1] = Content.Load<Texture2D>("banjo2");
@@ -1522,7 +1523,7 @@ namespace ABAFS
         public List<int> GarbageBanjos;
         public List<int> GarbageNotes;
 
-        public Texture2D AccordianTexture;
+        public Texture2D[] AccordianTexture;
         public Texture2D[] BanjoTexture;
         public Texture2D[] NoteTexture;
         public Texture2D[] ExplosionTexture;
@@ -1552,7 +1553,7 @@ namespace ABAFS
         Vector2 _defaultPlayerLocation;
         Vector2[] _explosionLocations;
 
-        public Playfield(Texture2D accordianTexture, Texture2D[] noteTexture, Texture2D[] banjoTexture, Texture2D[] explosionTexture, Texture2D pixelTexture,
+        public Playfield(Texture2D[] accordianTexture, Texture2D[] noteTexture, Texture2D[] banjoTexture, Texture2D[] explosionTexture, Texture2D pixelTexture,
             Vector2 defaultPlayerLocation, Vector2[] banjoSpawnLocation, int maxSprites = 100)
         {
             AccordianTexture = accordianTexture;
@@ -1566,7 +1567,7 @@ namespace ABAFS
             GarbageNotes = new List<int>();
 
             // Set up color array sizes
-            AccordianColorData = new Color[accordianTexture.Width * accordianTexture.Height];
+            AccordianColorData = new Color[accordianTexture[0].Width * accordianTexture[0].Height];
             BanjoColorData = new Color[3][];
             BanjoColorData[0] = new Color[banjoTexture[0].Width * banjoTexture[0].Height];
             BanjoColorData[1] = new Color[banjoTexture[1].Width * banjoTexture[1].Height];
@@ -1577,7 +1578,7 @@ namespace ABAFS
             NoteColorData[2] = new Color[noteTexture[2].Width * noteTexture[2].Height];
 
             // Give color arrays data accordingly
-            AccordianTexture.GetData(AccordianColorData);
+            AccordianTexture[0].GetData(AccordianColorData);
             BanjoTexture[0].GetData(BanjoColorData[0]);
             BanjoTexture[1].GetData(BanjoColorData[1]);
             BanjoTexture[2].GetData(BanjoColorData[2]);
@@ -1611,9 +1612,9 @@ namespace ABAFS
         {
             Player = new Accordian(NewID(), ObjectBox, AccordianTexture, AccordianColorData, location, lives, score);
         }
-        public void AddNote(Vector2 location, int parentIdentityNo)
+        public void AddNote(Vector2 location, int parentIdentityNo, bool targetPlayer)
         {
-            Notes.Add(new Note(NewID(), parentIdentityNo, ObjectBox, NoteTexture, NoteColorData, location, NewNoteLayer()));
+            Notes.Add(new Note(NewID(), parentIdentityNo, ObjectBox, NoteTexture, NoteColorData, location, this, NewNoteLayer(), targetPlayer));
         }
         public void AddBanjo(Vector2 location, Banjo.BanjoType type)
         {
@@ -1634,9 +1635,9 @@ namespace ABAFS
             return _explosions;
         }
 
-        public void LoadNote(int ID, int parentID, float x, float y)
+        public void LoadNote(int ID, int parentID, float x, float y, bool playerTarget = false, float _xVelocity = 0, float _yVelocity = 0)
         {
-            Notes.Add(new Note(ID, parentID, ObjectBox, NoteTexture, NoteColorData, new Vector2(x, y), NewNoteLayer()));
+            Notes.Add(new Note(ID, parentID, ObjectBox, NoteTexture, NoteColorData, new Vector2(x, y), this, NewNoteLayer()));
         }
         public void LoadBanjo(int ID, Banjo.BanjoType type, float x, float y, int ageInMilliseconds)
         {
@@ -1677,6 +1678,7 @@ namespace ABAFS
                 ManagePlayer(gameTime, graphicsDevice, debugMode);
                 ManageBanjos(gameTime, graphicsDevice, debugMode);
             }
+            VibrationManager.Update(gameTime);
 
             //ClearGarbage();
             _spriteCount = Banjos.Count;
@@ -1722,7 +1724,7 @@ namespace ABAFS
                 }
                 else
                 {
-                    Banjos[banjoNo].Update(graphicsDevice, gameTime, Player, debugMode);
+                    Banjos[banjoNo].Update(graphicsDevice, gameTime, this, debugMode);
                 }
             }
         }
@@ -1856,25 +1858,31 @@ namespace ABAFS
                 return vString;
             }
         }
+
+        public Texture2D TextureGlow;
         public Texture2D NoteTexture;
         public Color[] NoteTextureColorData;
-        public int Lives;
         public ScoreHandler Score;
-
-
+        public int Lives;
         public bool Expired;
+
+        Vector2 _noteSpawnPoint;
 
         int _velocity = 5;
         float _scale = 1f;
-        Vector2 _noteSpawnPoint;
+        float _glowOpacity;
         double _noteSpawnTime;
-        double _glowOpacity;
+        double _vibrationTime;
+        bool _firingGamePad;
+        bool _firingKeyboard;
+        
 
         //public Accordian(Texture2D texture, Color[] textureColorData, Texture2D noteTexture, Color[] noteTextureColorData, Vector2 location, int lives, int score)
-        public Accordian(int identityNo, ActionBox box, Texture2D texture, Color[] textureColorData, Vector2 location, int lives, int score)
+        public Accordian(int identityNo, ActionBox box, Texture2D[] texture, Color[] textureColorData, Vector2 location, int lives, int score)
         {
             ID = identityNo;
-            Texture = texture;
+            Texture = texture[0];
+            TextureGlow = texture[1];
             TextureColorData = textureColorData;
             //NoteTexture = noteTexture;
             //NoteTextureColorData = noteTextureColorData;
@@ -1892,49 +1900,60 @@ namespace ABAFS
             {
                 if (Lives > 1)
                 {
+                    VibrationManager.SetVibration(0.5f, 0.5f, 0.2);
                     Lives--;
                     Expired = false;
                 }
                 else
                 {
+                    VibrationManager.SetVibration(0.8f, 0.8f, 0.4);
+
                     // game over
                     playfield.GameOver = true;
                 }
             }
 
             // GamePad
-            if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < -0.8f)
+            if (GamePad.GetState(PlayerIndex.One).IsConnected == true)
             {
-                if (atLeftEnd(graphics) == false)
+                if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < -0.8f)
                 {
-                    Location.X = Location.X - _velocity;
+                    if (atLeftEnd(graphics) == false)
+                    {
+                        Location.X = Location.X - _velocity;
+                    }
                 }
-            }
-            else if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X > 0.8f)
-            {
-                if (atRightEnd(graphics) == false)
+                else if (GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X > 0.8f)
                 {
-                    Location.X = Location.X + _velocity;
+                    if (atRightEnd(graphics) == false)
+                    {
+                        Location.X = Location.X + _velocity;
+                    }
                 }
-            }
-            if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed)
-            {
-                if (atLeftEnd(graphics) == false)
+                if (GamePad.GetState(PlayerIndex.One).DPad.Left == ButtonState.Pressed)
                 {
-                    Location.X = Location.X - _velocity;
+                    if (atLeftEnd(graphics) == false)
+                    {
+                        Location.X = Location.X - _velocity;
+                    }
                 }
-            }
-            else if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed)
-            {
-                if (atRightEnd(graphics) == false)
+                else if (GamePad.GetState(PlayerIndex.One).DPad.Right == ButtonState.Pressed)
                 {
-                    Location.X = Location.X + _velocity;
+                    if (atRightEnd(graphics) == false)
+                    {
+                        Location.X = Location.X + _velocity;
+                    }
                 }
-            }
 
-            if (GamePad.GetState(PlayerIndex.One).Triggers.Right > 0.8f)
-            {
-                NoteSpawnTrigger(gameTime, playfield);
+                if (GamePad.GetState(PlayerIndex.One).Triggers.Right > 0.8f)
+                {
+                    NoteSpawnTrigger(gameTime, playfield);
+                    _firingGamePad = true;
+                }
+                else
+                {
+                    _firingGamePad = false;
+                }
             }
 
             // Keyboard
@@ -1955,9 +1974,22 @@ namespace ABAFS
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 NoteSpawnTrigger(gameTime, playfield);
+                _firingKeyboard = true;
+            }
+            else
+            {
+                _firingKeyboard = false;
             }
 
             // Final Changes
+            if ((_firingGamePad == true || _firingKeyboard == true) && _glowOpacity < 1)
+            {
+                _glowOpacity += 0.1f;
+            }
+            else if (_firingGamePad == false && _firingKeyboard == false && _glowOpacity > 0)
+            {
+                _glowOpacity -= 0.1f;
+            }
 
             base.UpdateBox(debugMode);
             _noteSpawnTime += gameTime.ElapsedGameTime.TotalSeconds;
@@ -1968,7 +2000,7 @@ namespace ABAFS
             if (_noteSpawnTime > 0.10)
             {
                 _noteSpawnTime = 0;
-                playfield.AddNote(_noteSpawnPoint, ID);
+                playfield.AddNote(_noteSpawnPoint, ID, false);
             }
         }
         bool atLeftEnd(GraphicsDevice graphics)
@@ -1997,6 +2029,7 @@ namespace ABAFS
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Location, null, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0.990f);
+            spriteBatch.Draw(TextureGlow, Location, null, Color.White * _glowOpacity, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0.990f);
         }
     }
     public class Note : Sprite
@@ -2004,6 +2037,7 @@ namespace ABAFS
         public Texture2D[] Textures;
         public Color[][] TexturesColorData;
         public bool Expired;
+        public bool TargetPlayer;
         public int ParentID;
 
         int _velocity = 5;
@@ -2011,8 +2045,11 @@ namespace ABAFS
         float _scale = 1f;
         int _textureNo = 0;
         double _textureTime;
+        
+        float _xVelocity;
+        float _yVelocity;
 
-        public Note(int identityNo, int parentIdentityNo, ActionBox box, Texture2D[] textures, Color[][] textureColorData, Vector2 location, float layerPoint)
+        public Note(int identityNo, int parentIdentityNo, ActionBox box, Texture2D[] textures, Color[][] textureColorData, Vector2 location, Playfield playfield, float layerPoint, bool targetPlayer = false, float xVelocity = 0, float yVelocity = 0)
         {
             ID = identityNo;
             ParentID = parentIdentityNo;
@@ -2023,11 +2060,41 @@ namespace ABAFS
             Location = location;
             Box = new ActionBox(box.PixelTexture, box.Color, (int)Location.X, (int)Location.Y, (int)(Texture.Width * _scale), (int)(Texture.Height * _scale));
             LayerPoint = layerPoint;
+
+            TargetPlayer = targetPlayer;
+            if (targetPlayer == true && xVelocity == 0 && yVelocity == 0)
+            {
+                GetBidirectionalVelocity(playfield.Player.Location);
+            }
+            else
+            {
+                _xVelocity = xVelocity;
+                _yVelocity = yVelocity;
+            }
+        }
+
+        void GetBidirectionalVelocity(Vector2 targetLocation)
+        {
+            double xDiff = targetLocation.X - Location.X;
+            double yDiff = targetLocation.Y - Location.Y;
+            double zDiff = Math.Sqrt(Math.Pow(xDiff, 2) + Math.Pow(yDiff, 2));
+            double downScale = zDiff / _velocity;
+            _xVelocity = (float)(xDiff / downScale);
+            _yVelocity = (float)(yDiff / downScale);
         }
 
         public void Update(GameTime gameTime, bool debugMode)
         {
-            Location.Y = Location.Y - _velocity;
+            if (TargetPlayer == false)
+            {
+                Location.Y -= _velocity;
+            }
+            else
+            {
+                Location.X += _xVelocity;
+                Location.Y += _yVelocity;
+            }
+
             if (_textureTime > 0.02)
             {
                 _textureTime = 0;
@@ -2084,6 +2151,7 @@ namespace ABAFS
 
         Explosion[] _explosions;
         Random _explosionPoint;
+        Vector2 _noteSpawnPoint;
 
         int _direction = 0;
         //float _scale = 0.15f;
@@ -2099,6 +2167,9 @@ namespace ABAFS
         
         bool[] _explosionsComplete;
         int _explosionCount;
+
+        double _noteTimeGap = 0.2;
+        double _noteSpawnTime;
 
         public Banjo(int identityNo, ActionBox box, BanjoType type, Texture2D[] textures, Color[][] textureColorData, Explosion[] explosions, Random explosionPointGen, Vector2 location, float layerPoint, int ageInMilliseconds = 0)
         {
@@ -2139,7 +2210,7 @@ namespace ABAFS
             _explosionPoint = explosionPointGen;
         }
 
-        public void Update(GraphicsDevice graphics, GameTime gameTime, Accordian player, bool debugMode)
+        public void Update(GraphicsDevice graphics, GameTime gameTime, Playfield playfield, bool debugMode)
         {
             AgeInMilliseconds += gameTime.ElapsedGameTime.Milliseconds;
             if (Explode == false)
@@ -2157,13 +2228,13 @@ namespace ABAFS
                     }
                     else
                     {
-                        PerformAdvancedBanjoBehaviour(player);
+                        PerformAdvancedBanjoBehaviour(gameTime, playfield);
                     }
                     ReachedBottomCheck(graphics);
                 }
                 else
                 {
-                    PerformAdvancedBanjoBehaviour(player);
+                    PerformAdvancedBanjoBehaviour(gameTime, playfield);
                 }
             }
             else
@@ -2218,41 +2289,59 @@ namespace ABAFS
                 }
             }
         }
-        private void PerformAdvancedBanjoBehaviour(Accordian player)
+        private void PerformAdvancedBanjoBehaviour(GameTime gameTime, Playfield playfield)
         {
-            if (player.Location.X > Location.X)
+            // Homing Movement
+            if (playfield.Player.Location.X > Location.X)
             {
-                if (Location.X + Velocity <= player.Location.X)
+                if (Location.X + Velocity <= playfield.Player.Location.X)
                 {
                     Location.X = Location.X + Velocity;
                 }
                 else
                 {
-                    Location.X = player.Location.X;
+                    Location.X = playfield.Player.Location.X;
                 }
             }
             else
             {
-                if (Location.X - Velocity >= player.Location.X)
+                if (Location.X - Velocity >= playfield.Player.Location.X)
                 {
                     Location.X = Location.X - Velocity;
                 }
                 else
                 {
-                    Location.X = player.Location.X;
+                    Location.X = playfield.Player.Location.X;
                 }
             }
 
-            if (player.Location.Y > Location.Y)
+            if (playfield.Player.Location.Y > Location.Y)
             {
-                if (Location.Y + Velocity <= player.Location.Y)
+                if (Location.Y + Velocity <= playfield.Player.Location.Y)
                 {
                     Location.Y = Location.Y + Velocity;
                 }
                 else
                 {
-                    Location.Y = player.Location.Y;
+                    Location.Y = playfield.Player.Location.Y;
                 }
+            }
+
+            if (Type == BanjoType.Deadly)
+            {
+                NoteSpawnTrigger(gameTime, playfield);
+            }
+        }
+        private void NoteSpawnTrigger(GameTime gameTime, Playfield playfield)
+        {
+            _noteSpawnTime += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_noteSpawnTime > 1)
+            {
+                _noteSpawnTime = 0;
+                _noteSpawnPoint.X = UsefulFunctions.GetTextureCenterPoint(Texture.Bounds, Location, Texture, UsefulFunctions.CenterPointType.X);
+                _noteSpawnPoint.Y = Location.Y + 20;
+                playfield.AddNote(_noteSpawnPoint, ID, true);
             }
         }
         private void MoveInDirection()
@@ -2424,7 +2513,6 @@ namespace ABAFS
         }
     }
 
-
     public class ActionBox
     {
         public Texture2D PixelTexture;
@@ -2561,6 +2649,7 @@ namespace ABAFS
         enum CollisionType
         {
             NoteToBanjo,
+            NoteToPlayer,
             BanjoToPlayer
         }
 
@@ -2629,35 +2718,72 @@ namespace ABAFS
 
                     foreach (Note note in _playfield.Notes)
                     {
-                        if (IsNear(banjo.Location, note.Location, CollisionType.NoteToBanjo))
+                        if (note.TargetPlayer == false)
                         {
-                            NearBox.X = banjo.Box.X - _nbBanjoMaxX;
-                            NearBox.Y = banjo.Box.Y - _nbBanjoMaxY;
-                            NearBox.Width = _nbBanjoMaxX - _nbBanjoMinX;
-                            NearBox.Height = _nbBanjoMaxY - _nbBanjoMinY;
-
-                            if (debugMode == true)
+                            if (IsNear(banjo.Location, note.Location, CollisionType.NoteToBanjo))
                             {
-                                NearBox.UpdateDraw();
-                                NearBoxDrawTime = _secsToDraw;
+                                NearBox.X = banjo.Box.X - _nbBanjoMaxX;
+                                NearBox.Y = banjo.Box.Y - _nbBanjoMaxY;
+                                NearBox.Width = _nbBanjoMaxX - _nbBanjoMinX;
+                                NearBox.Height = _nbBanjoMaxY - _nbBanjoMinY;
+
+                                if (debugMode == true)
+                                {
+                                    NearBox.UpdateDraw();
+                                    NearBoxDrawTime = _secsToDraw;
+                                }
+
+                                //if (banjo.Box.Rectangle.Intersects(note.Box.Rectangle))
+                                //{
+                                //    IntersectBox.Rectangle = banjo.Box.Rectangle;
+
+                                //    if (debugMode == true)
+                                //    {
+                                //        IntersectBox.UpdateDraw();
+                                //        IntersectBoxDrawTime = _secsToDraw;
+                                //    }
+
+                                if (IsTouching(banjo.Box.Rectangle, note.Box.Rectangle, banjo.TextureColorData, note.TextureColorData, debugMode))
+                                {
+                                    banjo.TriggerExpireExplosion();
+                                    note.Expired = true;
+                                }
+                                //}
                             }
-
-                            //if (banjo.Box.Rectangle.Intersects(note.Box.Rectangle))
-                            //{
-                            //    IntersectBox.Rectangle = banjo.Box.Rectangle;
-
-                            //    if (debugMode == true)
-                            //    {
-                            //        IntersectBox.UpdateDraw();
-                            //        IntersectBoxDrawTime = _secsToDraw;
-                            //    }
-
-                            if (IsTouching(banjo.Box.Rectangle, note.Box.Rectangle, banjo.TextureColorData, note.TextureColorData, debugMode))
+                        }
+                        else
+                        {
+                            if (IsNear(_playfield.Player.Location, note.Location, CollisionType.NoteToPlayer))
                             {
-                                banjo.TriggerExpireExplosion();
-                                note.Expired = true;
+                                NearBox.X = _playfield.Player.Box.X - _nbPlayerMaxX;
+                                NearBox.Y = _playfield.Player.Box.Y - _nbPlayerMaxY;
+                                NearBox.Width = _nbPlayerMaxX - _nbPlayerMinX;
+                                NearBox.Height = _nbPlayerMaxY - _nbPlayerMinY;
+
+                                if (debugMode == true)
+                                {
+                                    NearBox.UpdateDraw();
+                                    NearBoxDrawTime = _secsToDraw;
+                                }
+
+                                //if (banjo.Box.Rectangle.Intersects(_playfield.Player.Box.Rectangle))
+                                //{
+                                //    IntersectBox.Rectangle = _playfield.Player.Box.Rectangle;
+
+                                //    if (debugMode == true)
+                                //    {
+                                //        IntersectBox.UpdateDraw();
+                                //        IntersectBoxDrawTime = _secsToDraw;
+                                //    }
+
+                                if (IsTouching(note.Box.Rectangle, _playfield.Player.Box.Rectangle, note.TextureColorData, _playfield.Player.TextureColorData, debugMode))
+                                {
+                                    note.Expired = true;
+                                    _playfield.Player.Expired = true;
+                                }
+
+                                //}
                             }
-                            //}
                         }
                     }
                 }
@@ -2737,6 +2863,36 @@ namespace ABAFS
                 }
             }
             return false;
+        }
+    }
+
+    public class VibrationManager
+    {
+        static double _vibrationTime;
+        static bool _vibrationActive;
+
+        public static void SetVibration(float leftMotor, float rightMotor, double time)
+        {
+            if (_vibrationActive == false && GamePad.GetState(PlayerIndex.One).IsConnected == true)
+            {
+                GamePad.SetVibration(PlayerIndex.One, leftMotor, rightMotor);
+                _vibrationTime = time;
+                _vibrationActive = true;
+            }
+        }
+
+        public static void Update(GameTime gameTime)
+        {
+            if (_vibrationActive == true)
+            {
+                _vibrationTime -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (_vibrationTime <= 0)
+                {
+                    GamePad.SetVibration(PlayerIndex.One, 0f, 0f);
+                    _vibrationTime = 0;
+                    _vibrationActive = false;
+                }
+            }
         }
     }
 }
