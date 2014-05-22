@@ -18,6 +18,7 @@
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,7 +31,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -72,14 +72,26 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Physics\ActionBox.cs" />
+    <Compile Include="Physics\CollisionDetector.cs" />
+    <Compile Include="Playfield.cs" />
+    <Compile Include="SaveManager.cs" />
+    <Compile Include="Screen\Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Screen\ScreenSystem.cs" />
+    <Compile Include="Sprites\Accordian.cs" />
+    <Compile Include="Sprites\Banjo.cs" />
+    <Compile Include="Sprites\Explosion.cs" />
+    <Compile Include="Sprites\Note.cs" />
+    <Compile Include="Sprites\Sprites.cs" />
     <Compile Include="UsefulFunctions.cs" />
+    <Compile Include="VibrationManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BugList.txt" />
     <Content Include="Game.ico" />
+    <Content Include="BugList.txt" />
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>

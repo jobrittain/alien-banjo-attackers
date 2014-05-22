@@ -30,149 +30,135 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="accordian.png">
+    <Compile Include="textures\accordian\accordian.png">
       <Name>accordian</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="accordian2.png">
+    <Compile Include="textures\screen\accordian2.png">
       <Name>accordian2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="background.png">
+    <Compile Include="textures\screen\background.png">
       <Name>background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="banjo1.png">
+    <Compile Include="textures\banjo\banjo1.png">
       <Name>banjo1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="banjo2.png">
+    <Compile Include="textures\banjo\banjo2.png">
       <Name>banjo2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="banjo3.png">
+    <Compile Include="textures\banjo\banjo3.png">
       <Name>banjo3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="music1.wav">
+    <Compile Include="sound\music1.wav">
       <Name>music1</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="note1.png">
+    <Compile Include="textures\note\note1.png">
       <Name>note1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="note2.png">
+    <Compile Include="textures\note\note2.png">
       <Name>note2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="note3.png">
+    <Compile Include="textures\note\note3.png">
       <Name>note3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="font1.spritefont">
+    <Compile Include="spritefonts\font1.spritefont">
       <Name>font1</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="font3.spritefont">
+    <Compile Include="spritefonts\font3.spritefont">
       <Name>font3</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="font4.spritefont">
+    <Compile Include="spritefonts\font4.spritefont">
       <Name>font4</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
-    <Compile Include="font2.spritefont">
+    <Compile Include="spritefonts\font2.spritefont">
       <Name>font2</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="title.png">
+    <Compile Include="textures\screen\title.png">
       <Name>title</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="music2.wav">
+    <Compile Include="sound\music2.wav">
       <Name>music2</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="music3.wav">
+    <Compile Include="sound\music3.wav">
       <Name>music3</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sound1.wav">
+    <Compile Include="sound\sound1.wav">
       <Name>sound1</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="note4.png">
+    <Compile Include="textures\note\note4.png">
       <Name>note4</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="buttonh.png">
+    <Compile Include="textures\screen\buttonh.png">
       <Name>buttonh</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="button.png">
+    <Compile Include="textures\screen\button.png">
       <Name>button</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="star1.png">
-      <Name>star1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="star2.png">
-      <Name>star2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="accordiang.png">
+    <Compile Include="textures\accordian\accordiang.png">
       <Name>accordiang</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="font5.spritefont">
+    <Compile Include="spritefonts\font5.spritefont">
       <Name>font5</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
@@ -180,77 +166,96 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sound2.wav">
+    <Compile Include="sound\sound2.wav">
       <Name>sound2</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="explosion\explosion1.png">
+    <Compile Include="textures\explosion\explosion1.png">
       <Name>explosion1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion10.png">
+    <Compile Include="textures\explosion\explosion10.png">
       <Name>explosion10</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion11.png">
+    <Compile Include="textures\explosion\explosion11.png">
       <Name>explosion11</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion12.png">
+    <Compile Include="textures\explosion\explosion12.png">
       <Name>explosion12</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion13.png">
+    <Compile Include="textures\explosion\explosion13.png">
       <Name>explosion13</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion2.png">
+    <Compile Include="textures\explosion\explosion2.png">
       <Name>explosion2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion3.png">
+    <Compile Include="textures\explosion\explosion3.png">
       <Name>explosion3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion4.png">
+    <Compile Include="textures\explosion\explosion4.png">
       <Name>explosion4</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion5.png">
+    <Compile Include="textures\explosion\explosion5.png">
       <Name>explosion5</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion6.png">
+    <Compile Include="textures\explosion\explosion6.png">
       <Name>explosion6</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion7.png">
+    <Compile Include="textures\explosion\explosion7.png">
       <Name>explosion7</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion8.png">
+    <Compile Include="textures\explosion\explosion8.png">
       <Name>explosion8</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="explosion\explosion9.png">
+    <Compile Include="textures\explosion\explosion9.png">
       <Name>explosion9</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\screen\gameovertitle.png">
+      <Name>gameovertitle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="sound\sound3.wav">
+      <Name>sound3</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="sound\sound4.wav">
+      <Name>sound4</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
