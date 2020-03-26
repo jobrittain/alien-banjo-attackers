@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E32EF3F5-3221-40FD-A1A6-7087A9AF802F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Abafs</RootNamespace>
+    <AssemblyName>Abafs</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MonoGamePlatform>Windows</MonoGamePlatform>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Game.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Physics\ActionBox.cs" />
+    <Compile Include="Physics\CollisionDetector.cs" />
+    <Compile Include="Playfield.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveManager.cs" />
+    <Compile Include="Screen\Menu.cs" />
+    <Compile Include="Screen\ScreenSystem.cs" />
+    <Compile Include="Sprites\Accordian.cs" />
+    <Compile Include="Sprites\Banjo.cs" />
+    <Compile Include="Sprites\Explosion.cs" />
+    <Compile Include="Sprites\Note.cs" />
+    <Compile Include="Sprites\Sprites.cs" />
+    <Compile Include="UsefulFunctions.cs" />
+    <Compile Include="VibrationManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Sound\music1.wav" />
+    <Content Include="Content\Sound\music2.wav" />
+    <Content Include="Content\Sound\music3.wav" />
+    <Content Include="Content\Sound\sound1.wav" />
+    <Content Include="Content\Sound\sound2.wav" />
+    <Content Include="Content\Sound\sound3.wav" />
+    <Content Include="Content\Sound\sound4.wav" />
+    <Content Include="Content\Textures\accordian\accordian.png" />
+    <Content Include="Content\Textures\accordian\accordiang.png" />
+    <Content Include="Content\Textures\banjo\banjo1.png" />
+    <Content Include="Content\Textures\banjo\banjo2.png" />
+    <Content Include="Content\Textures\banjo\banjo3.png" />
+    <Content Include="Content\Textures\explosion\explosion1.png" />
+    <Content Include="Content\Textures\explosion\explosion10.png" />
+    <Content Include="Content\Textures\explosion\explosion11.png" />
+    <Content Include="Content\Textures\explosion\explosion12.png" />
+    <Content Include="Content\Textures\explosion\explosion13.png" />
+    <Content Include="Content\Textures\explosion\explosion2.png" />
+    <Content Include="Content\Textures\explosion\explosion3.png" />
+    <Content Include="Content\Textures\explosion\explosion4.png" />
+    <Content Include="Content\Textures\explosion\explosion5.png" />
+    <Content Include="Content\Textures\explosion\explosion6.png" />
+    <Content Include="Content\Textures\explosion\explosion7.png" />
+    <Content Include="Content\Textures\explosion\explosion8.png" />
+    <Content Include="Content\Textures\explosion\explosion9.png" />
+    <Content Include="Content\Textures\note\note1.png" />
+    <Content Include="Content\Textures\note\note2.png" />
+    <Content Include="Content\Textures\note\note3.png" />
+    <Content Include="Content\Textures\note\note4.png" />
+    <Content Include="Content\Textures\screen\accordian2.png" />
+    <Content Include="Content\Textures\screen\background.png" />
+    <Content Include="Content\Textures\screen\button.png" />
+    <Content Include="Content\Textures\screen\buttonh.png" />
+    <Content Include="Content\Textures\screen\gameovertitle.png" />
+    <Content Include="Content\Textures\screen\title.png" />
+    <Content Include="Game.ico" />
+    <Content Include="LayerStructure.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <None Include="Content\SpriteFonts\font1.spritefont" />
+    <None Include="Content\SpriteFonts\font2.spritefont" />
+    <None Include="Content\SpriteFonts\font3.spritefont" />
+    <None Include="Content\SpriteFonts\font4.spritefont" />
+    <None Include="Content\SpriteFonts\font5.spritefont" />
+    <None Include="Content\SpriteFonts\joystix.ttf" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
